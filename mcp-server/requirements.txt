@@ -1,0 +1,4 @@
+# Runtime is pure Python 3 stdlib (JSON-RPC over stdio) — zero required deps.
+# Optional, for production modes:
+psycopg2-binary>=2.9     # direct PostgreSQL access when DATABASE_URL is set
+anthropic>=0.40          # Claude brain when ANTHROPIC_API_KEY is set
