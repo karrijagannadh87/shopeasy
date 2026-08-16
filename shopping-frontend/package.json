@@ -1,0 +1,30 @@
+{
+  "name": "shopeasy-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ShopEasy frontend — Next.js + React + TailwindCSS",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@stripe/react-stripe-js": "^2.8.1",
+    "@stripe/stripe-js": "^4.9.0",
+    "axios": "^1.7.9",
+    "lucide-react": "^0.469.0",
+    "next": "14.2.28",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
+    "react-hot-toast": "^2.4.1",
+    "swiper": "^11.2.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17"
+  }
+}
