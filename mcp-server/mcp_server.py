@@ -87,6 +87,7 @@ SEARCH_STOPWORDS = {
     "the", "a", "an", "for", "me", "my", "i", "want", "need", "show", "find",
     "some", "cheap", "best", "good", "buy", "get", "under", "over", "with",
     "and", "of", "to", "looking", "what", "do", "you", "have", "please",
+    "dollars", "dollar", "usd", "bucks", "price", "priced", "around",
 }
 
 
@@ -165,7 +166,39 @@ def products_from_store(query_text="", filters=None, limit=12):
             key=lambda p: (_score(p, tokens), float(p.get("rating") or 0), int(p.get("review_count") or 0)),
             reverse=True,
         )
+
+    # No keyword matches but a price band was asked for (e.g. "a gift under
+    # $50") — return the best-rated products in that band.
+    if not rows and (filters.get("min_price") is not None or filters.get("max_price") is not None):
+        rows = _fetch_by_price(filters)
+
     return rows[: int(limit)]
+
+
+def _fetch_by_price(filters):
+    """Top-rated products within a price band (no keyword filter)."""
+    limit = int(filters.get("limit") or 12)
+    if DATABASE_URL:
+        sql = "SELECT * FROM products WHERE 1=1"
+        params = []
+        if filters.get("category"):
+            params.append(filters["category"])
+            sql += " AND category = %s"
+        if filters.get("min_price") is not None:
+            params.append(float(filters["min_price"]))
+            sql += " AND price >= %s"
+        if filters.get("max_price") is not None:
+            params.append(float(filters["max_price"]))
+            sql += " AND price <= %s"
+        sql += " ORDER BY rating DESC, review_count DESC LIMIT %s"
+        params.append(limit)
+        return db_query(sql, params)
+    params = urllib.parse.urlencode({
+        "limit": limit,
+        "sort": "rating",
+        **{k: v for k, v in filters.items() if v is not None},
+    })
+    return api("GET", f"/products?{params}").get("products", [])
 
 
 # ── Tools ───────────────────────────────────────────────────────────────────
