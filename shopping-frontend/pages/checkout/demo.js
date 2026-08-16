@@ -38,7 +38,13 @@ export default function DemoCheckout() {
     try {
       await api.post('/payments/demo-pay', { order_number: order });
       toast.success('Payment successful! 🎉');
-      router.push(`/orders/${order}?paid=1`);
+      // Static demo (GitHub Pages) has no prerendered page for runtime order
+      // numbers — the order list shows the freshly paid order instead.
+      if (process.env.NEXT_PUBLIC_STATIC_DEMO === 'true') {
+        router.push('/orders?paid=1');
+      } else {
+        router.push(`/orders/${order}?paid=1`);
+      }
     } catch (err) {
       toast.error(errorMessage(err, 'Payment failed'));
       setPaying(false);

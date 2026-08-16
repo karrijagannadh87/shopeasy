@@ -5,6 +5,7 @@
   "description": "ShopEasy frontend — Next.js + React + TailwindCSS",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/copyDemoData.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

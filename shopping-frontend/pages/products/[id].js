@@ -8,6 +8,21 @@ import ProductCard from '@/components/ProductCard';
 import StarRating from '@/components/StarRating';
 import toast from 'react-hot-toast';
 
+// Static export (GitHub Pages demo): prerender every seeded product page.
+// In normal dev/prod builds this route stays fully dynamic.
+export async function getStaticPaths() {
+  if (process.env.NEXT_PUBLIC_STATIC_DEMO !== 'true') return { paths: [], fallback: true };
+  const demoData = require('@/lib/demoData.json');
+  return {
+    paths: demoData.products.map((p) => ({ params: { id: String(p.id) } })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps() {
+  return { props: {} };
+}
+
 export default function ProductDetail() {
   const router = useRouter();
   const { id } = router.query;

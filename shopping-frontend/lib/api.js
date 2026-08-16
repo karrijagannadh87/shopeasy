@@ -4,7 +4,10 @@
  */
 import axios from 'axios';
 
-export const api = axios.create({ baseURL: '/api' });
+// In static-demo builds the site is served under a base path (GitHub Pages)
+// and the service worker answers /api/*; otherwise Next.js proxies to Express.
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
+export const api = axios.create({ baseURL: `${BASE}/api` });
 
 api.interceptors.request.use((config) => {
   const token =

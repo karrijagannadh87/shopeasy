@@ -1,0 +1,57 @@
+# Builds the ShopEasy frontend as a fully static site (with the service-worker
+# mock API) and deploys it to GitHub Pages as a live demo.
+#
+#   https://karrijagannadh87.github.io/shopeasy/
+#
+# Note: the demo runs without a backend — /api/* calls are answered by
+# public/sw.js from bundled demo data. The real backend is still required
+# for full production deployments (see README).
+name: Deploy live demo to GitHub Pages
+
+on:
+  push:
+    branches: [main, arena/01a00923-shopeasy]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: shopping-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: shopping-frontend
+
+      - name: Build static demo export
+        run: npm run build
+        working-directory: shopping-frontend
+        env:
+          NEXT_PUBLIC_STATIC_DEMO: "true"
+          NEXT_PUBLIC_BASE_PATH: /shopeasy
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: shopping-frontend/out
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

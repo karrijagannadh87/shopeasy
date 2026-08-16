@@ -4,6 +4,21 @@ import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Package, Clock, Truck, CheckCheck, XCircle } from 'lucide-react';
 import api from '@/lib/api';
 
+// Static export (GitHub Pages demo): prerender the seeded demo orders.
+// In normal dev/prod builds this route stays fully dynamic.
+export async function getStaticPaths() {
+  if (process.env.NEXT_PUBLIC_STATIC_DEMO !== 'true') return { paths: [], fallback: true };
+  const demoData = require('@/lib/demoData.json');
+  return {
+    paths: demoData.demoOrders.map((o) => ({ params: { orderNumber: o.order_number } })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps() {
+  return { props: {} };
+}
+
 const STATUS_META = {
   pending: { label: 'Pending payment', icon: Clock, color: 'text-amber-600 bg-amber-50' },
   paid: { label: 'Paid', icon: CheckCircle2, color: 'text-emerald-600 bg-emerald-50' },

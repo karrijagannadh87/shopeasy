@@ -1,6 +1,36 @@
 # 🛒 ShopEasy — Full-Stack E-Commerce with MCP + Claude AI
 
-A complete, production-shaped shopping website with AI built in:
+<p align="center">
+  <img src="docs/banner.png" alt="ShopEasy — full-stack e-commerce with MCP + Claude AI" width="100%" />
+</p>
+
+<p align="center">
+  <a href="https://karrijagannadh87.github.io/shopeasy/"><img src="https://img.shields.io/badge/LIVE%20DEMO-GitHub%20Pages-4f46e5?style=for-the-badge&logo=githubpages&logoColor=white" alt="Live demo" /></a>
+  <img src="https://img.shields.io/badge/Next.js%2014-React%20%2B%20Tailwind-black?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Express-PostgreSQL%20%2B%20Redis-339933?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
+  <img src="https://img.shields.io/badge/Stripe%20Payments-635bff?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe" />
+  <img src="https://img.shields.io/badge/AI-MCP%20%2B%20Claude-d97757?style=for-the-badge&logo=anthropic&logoColor=white" alt="MCP + Claude" />
+</p>
+
+> 🚀 **Try the live demo:** [**karrijagannadh87.github.io/shopeasy**](https://karrijagannadh87.github.io/shopeasy/) — a fully interactive static build where the AI chat, smart search, cart, checkout and admin dashboard all work in your browser (backed by a service-worker mock of the API).
+> Sign in with `demo@shopeasy.dev / demo123` or `admin@shopeasy.dev / admin123`.
+
+---
+
+## ✨ Features
+
+| Core | AI (MCP) |
+| --- | --- |
+| 🏠 Home with featured products & banners | 🧠 AI product recommendations |
+| 🔍 Search, filter, sort, pagination | 💬 AI shopping chatbot (floating widget) |
+| 📦 Product detail pages | 🔎 Smart search — “wireless headphones under $100” |
+| 🛒 Cart (guest + account sync) | 📊 AI analytics dashboard with written insights |
+| 👤 JWT + bcrypt auth (customer / admin) | |
+| 💳 Stripe Checkout (demo mode included) | |
+| 📋 Order history + tracking | |
+| 👨‍💼 Admin: add/edit/delete products, manage orders | |
+
+## 🏗️ Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -26,26 +56,12 @@ A complete, production-shaped shopping website with AI built in:
 └──────────────────────────────────────────────────────────────┘
 ```
 
-## ✨ Features
-
-| Core | AI (MCP) |
-| --- | --- |
-| 🏠 Home with featured products & banners | 🧠 AI product recommendations |
-| 🔍 Search, filter, sort, pagination | 💬 AI shopping chatbot (floating widget) |
-| 📦 Product detail pages | 🔎 Smart search — “wireless headphones under $100” |
-| 🛒 Cart (guest + account sync) | 📊 AI analytics dashboard with written insights |
-| 👤 JWT + bcrypt auth (customer / admin) | |
-| 💳 Stripe Checkout (demo mode included) | |
-| 📋 Order history + tracking | |
-| 👨‍💼 Admin: add/edit/delete products, manage orders | |
-
-## 🏗️ Architecture
-
 ```
 shopeasy/
 ├── shopping-frontend/   Next.js 14 (Pages Router) + React 18 + Tailwind + zustand
 ├── shopping-backend/    Express + PostgreSQL (pg) + Redis (ioredis) + Stripe + JWT
 ├── mcp-server/          Python MCP server (JSON-RPC over stdio) + Claude brain
+├── docs/banner.png      README banner
 └── docker-compose.yml   PostgreSQL 16 + Redis 7 for local dev
 ```
 
@@ -83,6 +99,26 @@ npm run dev
 - Click the **🤖 sparkle button** (bottom-right) on any page → *“Recommend a gift under $80”*, *“yoga mats under $60”*, *“track SHOP-…”*
 - On `/products`, toggle **✨ AI Search** and type a sentence
 - On `/admin` (dashboard), read the **AI Analytics** insights written by the MCP server
+
+## 🌐 Live demo (GitHub Pages)
+
+The [live demo](https://karrijagannadh87.github.io/shopeasy/) is a static export of the
+frontend (`.github/workflows/pages.yml` deploys it automatically on every push).
+Because GitHub Pages can't run the Express/Python backend, the demo registers a
+**service worker** (`shopping-frontend/public/sw.js`) that answers every `/api/*`
+call from bundled demo data + localStorage — the same endpoints, same response
+shapes, so the whole experience works: browsing, AI chat, smart search, cart
+sync, checkout, order history and the admin dashboard.
+
+```bash
+# Build the static demo locally
+cd shopping-frontend
+NEXT_PUBLIC_STATIC_DEMO=true NEXT_PUBLIC_BASE_PATH=/shopeasy npm run build
+npx serve out
+```
+
+> ⚠️ The demo is a *frontend-only* experience. Real authentication, Stripe
+> charges, Postgres and the Python MCP server run with the backend (below).
 
 ## 🔌 Going production
 
